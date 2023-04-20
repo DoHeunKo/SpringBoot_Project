@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+	
+	$(function(){
+		$("#password2").on("focus", function() {    
+			if ($("#password1").val() == "") {
+				alert("먼저 비밀번호를 입력하세요.");
+		      $("#password1").focus();
+		    }
+		})
+		$("#password2").on("keyup",function(){
+			if($("#password1").val() != $("#password2").val()){
+				$("#passwordChk").css("color","red");
+				$("#passwordChk").text("비밀번호가 일치하지 않습니다");
+			}else{
+				$("#passwordChk").css("color","green");
+				$("#passwordChk").text("비밀번호가 일치");
+			}
+		})
+		$("input[name=address]").on("focus", function() {    
+			addrSearch();
+			if($("input[name=address]").val()!=null){
+				$(".btn").focus();
+			}
+		})
+	})
+	
+	function idChk(){
+		var id=$("#id").val();
+		$.ajax({
+			url:"/user/idChk",
+			method:"get",
+			dataType:"json",
+			async:false,
+			data:{"id":id},
+			success:function(edata){
+				if(edata.id!=null){
+					$("#idChk").css("color","red");
+					$("#idChk").text("사용할 수 없는 아이디");
+				}else{
+					$("#idChk").css("color","green");
+					$("#idChk").text("사용가능 아이디");
+					
+				}
+			},
+			error:function(e){
+				console.log(e);
+			}
+		});
+		
+	}
+</script>
+
+<style type="text/css">
+	input+span{
+		font-weight:bold;
+		color: red;
+	}
+	
+</style>
+</head>
+<body>
+<h1>회원가입</h1>
+<form th:action="@{/user/regist}" method="post" th:object="${registCommand}">
+<table class="table">
+	<tr>
+		<th>아이디:</th>
+		<td><input type="text" class="form-control" name="id" id="id" th:field="*{id}"/>
+			<span th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
+			<span id="idChk"></span>
+			<button type="button" onclick="idChk()">중복확인</button>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>비밀번호:</th>
+		<td><input type="password" id="password1" th:field="*{password}"/>
+		<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+		</td>
+	</tr>
+	<tr>
+		<th>비밀번호 확인:</th>
+		<td><input type="password" id="password2"/>
+		<span id="passwordChk"></span>
+		</td>
+	</tr>
+	<tr>
+		<th>이름:</th>
+		<td><input type="text" name="name" th:field="*{name}"/>
+		<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+		</td>
+	</tr>
+	<tr>
+		<th>이메일:</th>
+		<td><input type="email" name="email" id="email" th:field="*{email}"/>
+		<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+		</td>
+	</tr>
+	<tr>
+		<th>주소:</th>
+		<td>
+			<input type="text" name="address" th:field="*{address}"/>	
+			<span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+			<button type="button"  onclick="addrSearch()">주소찾기</button>
+		</td>
+	</tr>
+	
+	<tr>
+		<td><input type="submit" value="가입완료" class="btn"/></td>
+	</tr>
+</table>
+</form>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+	function addrSearch(){
+	    new daum.Postcode({
+	        oncomplete: function(data) {
+	            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+	            // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+	            var roadAddress=data.roadAddress;
+	            $("input[name=address]").val(roadAddress);
+	        }
+	    }).open();
+	}
+</script>
+</body>
+</html>
