@@ -1,0 +1,40 @@
+CREATE TABLE USER(
+   user_no INT AUTO_INCREMENT PRIMARY KEY,
+   user_id VARCHAR(50) NOT NULL UNIQUE,
+   user_name VARCHAR(10) NOT NULL,
+   user_password VARCHAR(50) NOT NULL,
+   user_email VARCHAR(50) NOT NULL UNIQUE,
+   user_address VARCHAR(50) NOT NULL,
+   user_role VARCHAR(10) NOT NULL DEFAULT 'user',
+   user_delflag VARCHAR(10) NOT NULL DEFAULT 'n');
+
+CREATE TABLE room(
+   room_no INT AUTO_INCREMENT PRIMARY KEY,
+   room_title VARCHAR(50) NOT NULL,
+   room_content VARCHAR(1000) NOT NULL,
+   room_category VARCHAR(20) NOT NULL,
+   room_host VARCHAR(10) NOT NULL,
+   room_upload VARCHAR(10) NOT NULL DEFAULT 'n',
+   room_chat VARCHAR(10) NOT NULL DEFAULT 'n',
+   room_count INT NOT NULL DEFAULT 1,
+   room_max INT NOT NULL,
+   user_no INT NOT NULL,
+   room_image BLOB,
+   FOREIGN KEY (user_no) REFERENCES USER(user_no));
+
+CREATE TABLE schedule(
+   schedule_no INT AUTO_INCREMENT PRIMARY KEY,
+   schedule_content VARCHAR(200) NOT NULL,
+   schedule_mdate VARCHAR(12) NOT NULL,
+   room_no INT NOT NULL,
+   FOREIGN KEY (room_no) REFERENCES room(room_no));
+
+CREATE TABLE FILE(
+   file_no INT AUTO_INCREMENT PRIMARY KEY,
+   file_origin_name VARCHAR(100) NOT NULL,
+   file_stored_name VARCHAR(100) NOT NULL,
+   file_size INT NOT NULL,
+   file_delflag VARCHAR(10) NOT NULL DEFAULT 'n',
+   room_no INT NOT NULL,
+   FOREIGN KEY (room_no) REFERENCES room(room_no));
+   
