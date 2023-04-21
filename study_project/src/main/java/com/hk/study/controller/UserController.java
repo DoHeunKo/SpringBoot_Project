@@ -82,4 +82,13 @@ public class UserController {
 		map.put("id", resultId);
 		return map;
 	}
+	@GetMapping("/emailChk")
+	@ResponseBody
+	public Map<String,String> emailChk(String email){
+		System.out.println("이메일 중복 체크");
+		String resultEmail=userService.emailChk(email);
+		Map<String,String> map=new HashMap<>();
+		map.put("email", resultEmail);
+		return map;
+	}
 }

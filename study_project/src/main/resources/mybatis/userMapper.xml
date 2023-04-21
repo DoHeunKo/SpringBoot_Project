@@ -16,6 +16,9 @@
 	<select id="idChk" resultType="String" parameterType="String">
 		SELECT USER_ID FROM USER WHERE USER_ID=#{user_id}
 	</select>
+	<select id="emailChk" resultType="String" parameterType="String">
+		SELECT USER_EMAIL FROM USER WHERE USER_EMAIL=#{user_email}
+	</select>
 <!--     <select id="idChk" parameterType="String" resultType="String"> -->
 <!--         SELECT ID FROM MEMBER WHERE ID=#{id} -->
 <!--     </select> -->

@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/thymeleaf/layouts/manager_layout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
+<div layout:fragment="content" class="content">
 <h1>관리자 페이지</h1>
-<p>[[${session.dto.user_id}]]님</p>
+<p>[[${session.dto.user_id}]]님 ([[${session.dto.user_role}]])</p>
+</div>
 </body>
 </html>

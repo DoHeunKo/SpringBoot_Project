@@ -13,4 +13,6 @@ public interface UserMapper {
 	public UserDto userLogin(String id);
 	//아이디 중복체크
 	public String idChk(String id);
+	//이메일 중복체크
+	public String emailChk(String email);
 }

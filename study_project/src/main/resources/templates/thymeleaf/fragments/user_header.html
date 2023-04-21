@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+
+<style type="text/css">
+	
+</style>
+</head>
+<body>
+<div id="head">
+<div th:fragment="header" >
+<nav class="navbar navbar-defalut navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" style="font-family:'Caveat';font-size:100px;color:black" href="index.jsp">Let's study</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse justify-content-end">
+	  <ul class="nav navbar-nav navbar-right" style="font-size:20px; ">
+	    <li class="active"><a href="#" style="color:black">마이페이지</a></li>
+	    <li><a href="#about" style="color:black">로그아웃</a></li>
+	  </ul>
+	</div><!--/.nav-collapse -->
+	</div>
+</nav>
+</div>
+</div>
+</body>
+</html>

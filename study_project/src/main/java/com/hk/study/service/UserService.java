@@ -51,5 +51,7 @@ public class UserService {
 	public String idChk(String id) {
 		return userMapper.idChk(id);
 	}
-	
+	public String emailChk(String email) {
+		return userMapper.emailChk(email);
+	}
 }
