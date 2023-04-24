@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/thymeleaf/layouts/user_layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+
+</head>
+<body>
+<div layout:fragment="content">
+
+<h1>게시판</h1>
+	<table class="table">
+		<tr>
+			<th>no</th>
+			<th>관심사</th>
+			<th>스터디이름</th>
+			<th>참여인원</th>
+		</tr>
+		<th:block th:if="${#lists.isEmpty(list)}">
+			<tr><td colspan="4" style="text-align:center;">-------스터디가 없음.-----------</td></tr>
+		</th:block>
+		<th:block th:unless="${#lists.isEmpty(list)}">
+			<tr th:each="dto:${list}">
+				<td><input type="checkbox" name="chk" th:value="${dto.room_no}"/></td>
+				<td th:text="${dto.room_category}"></td>
+				<td>
+					<a th:href="@{/room/roomDetail(room_no=${dto.room_no})}">[[${dto.room_title}]]</a>
+				</td>
+				
+				<td th:text="${dto.room_count}"></td>
+			</tr>
+		</th:block>
+		
+	</table>
+</div>
+</body>
+</html>

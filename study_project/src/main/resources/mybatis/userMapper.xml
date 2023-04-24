@@ -8,7 +8,7 @@
         #{user_address},'USER','N');
     </insert>
 	<select id="userLogin" resultType="UserDto" parameterType="String">
-		SELECT USER_ID,USER_NAME,USER_PASSWORD,USER_EMAIL,USER_ADDRESS,USER_ROLE
+		SELECT USER_NO,USER_ID,USER_NAME,USER_PASSWORD,USER_EMAIL,USER_ADDRESS,USER_ROLE
 		FROM USER
 		WHERE USER_ID=#{user_id}
 	</select>

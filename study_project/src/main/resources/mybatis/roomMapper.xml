@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.study.mapper.RoomMapper">
+    <insert id="roomRegist" parameterType="RoomDto">
+        INSERT INTO ROOM VALUES
+        (NULL,#{room_title},#{room_content},#{room_category},#{room_host},
+        #{room_upload},#{room_chat},#{room_count},10,#{user_no},#{room_image});
+    </insert>
+	<select id="roomList" resultType="RoomDto">
+		SELECT ROOM_TITLE,ROOM_CATEGORY,ROOM_COUNT,ROOM_IMAGE
+		FROM ROOM
+	</select>
+</mapper>

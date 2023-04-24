@@ -5,7 +5,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
+<style type="text/css">
+	span{
+		font-weight:bold;
+		color: red;
+		font-size:15px;
+	}
+	
+</style>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 
 <script type="text/javascript">
@@ -29,7 +36,20 @@
 <div layout:fragment="content" class="content">
 <h1>방 생성</h1>
 
-<form action="/room/createRoom" method="post" th:object="${roomCreateCommand}">
+<p th:text="${session.dto.user_id}"></p>
+<p th:text="${session.dto.user_role}"></p>
+<p th:text="${session.dto.user_no}"></p>
+
+<!-- <form id="form1" th:action="@{/room/roomCreate}" method="post" th:object="${session.dto}"> -->
+
+<!--  <input type="hidden" name="roomhost" th:value="${session.dto.user_id}"/> -->
+<!--  <input type="hidden" name="roomhost" th:value="${session.dto.user_no}"/> -->
+ 
+<!-- </form> -->
+
+
+<form id="form2" th:action="@{/room/roomCreate}" method="post" th:object="${roomCreateCommand}">
+	<input type="hidden" name="roomhost" th:value="gggg"/>
 	<label for="file">대표이미지</label><br/>
 	<img id="preview" style="width:250px;height:250px;border-radius: 60%;"/>
 	<input type="file" onchange="readURL(this);" name="filename"> <br/>
@@ -43,25 +63,26 @@
     <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span><br/>
     
     <label for="category">카테고리</label>
-    <select name="category" required th:classappend="${#fields.hasErrors('category')} ? 'is-invalid' : ''>
-<!-- 	    <option value="">관심사선택</option> -->
+    <select name="category" th:field="*{category}">
+		<option value="">카테고리 선택</option>
 	    <option value="어학">어학</option>
 	    <option value="자격증">자격증</option>
 	    <option value="기타">기타</option>
 	</select>
-	<span th:if="${#fields.hasErrors('category')}" class="invalid-feedback" th:errors="*{category}"></span><br/>
+	<span th:if="${#fields.hasErrors('category')}" th:classappend="${'invalid-feedback'}" th:errors="*{category}"></span><br/>
 	<label for="upload">업로드 가능 여부</label>
-    <input type="radio" id="upload" name="upload" checked="checked" onclick="uploadChk()"><br/>
+    <input type="radio" id="upload" name="upload" value="y" checked onclick="uploadChk()"><br/>
     <label for="chat">대화창 생성 여부</label>
-    <input type="radio" id="chat" name="chat"  checked="checked" onclick="chatChk()"><br/>
+    <input type="radio" id="chat" name="chat" value="y"  checked onclick="chatChk()"><br/>
+    
     <label for="count">참여인원</label>
-    <select name="count" required th:classappend="${#fields.hasErrors('count')} ? 'is-invalid' : ''>
-<!-- 	    <option value="">최대 10명</option> -->
+    <select name="count" th:field="*{count}" >
+    	<option value="">인원수 선택</option>
 	    <option value="1">1</option>
 	    <option value="2">2</option>
 	    <option value="3">3</option>
 	</select>
-	<span th:if="${#fields.hasErrors('count')}" class="invalid-feedback" th:errors="*{count}"></span><br/>
+	<span th:if="${#fields.hasErrors('count')}" th:classappend="${'invalid-feedback'}" th:errors="*{count}"></span><br/>
     <input type="submit" value="방생성 완료">
 </form>
 

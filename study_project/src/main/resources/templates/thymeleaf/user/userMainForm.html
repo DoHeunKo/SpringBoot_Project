@@ -26,12 +26,12 @@
 </head>
 <body>
 <div layout:fragment="content" class="content">
-<p>[[${session.dto.user_id}]]님</p>
+<p th:text="${session.dto.user_id}"></p>
 <div id="content" class="center-block">
 	  <button type="button" id="button1" class="btn btn-success btn-lg" 
 	  th:onclick="|location.href='@{/room/roomCreateForm}'|">스터디룸 생성</button>
 	  <button type="button" id="button2" class="btn btn-success btn-lg"
-	  th:onclick="|location.href='@{/room/roomCreateForm}'|">스터디룸 목록</button>
+	  th:onclick="|location.href='@{/room/roomList}'|">스터디룸 목록</button>
 	</div> 
 
 

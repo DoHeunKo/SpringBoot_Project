@@ -20,7 +20,8 @@ public class RoomDto {
 	private String room_host;
 	private String room_upload;
 	private String room_chat;
-	private int room_count;
-	private int room_max;
+	private Integer room_count;
+	private Integer room_max;
 	private String room_image;
+	private Integer user_no;
 }

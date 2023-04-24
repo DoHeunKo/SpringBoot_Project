@@ -18,6 +18,7 @@ import com.hk.study.command.RegistCommand;
 import com.hk.study.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
@@ -35,12 +36,12 @@ public class UserController {
 	@PostMapping("/login")
 	public String login(@Validated LoginCommand loginCommand,
 						BindingResult result,
-						HttpServletRequest request, Model model) {
+						HttpServletRequest request, Model model,HttpSession session) {
 		
 		if(result.hasErrors()) {
 			return "thymeleaf/user/loginForm";
 		}
-		
+		session.setAttribute("id", loginCommand.getId());
 		return userService.userLogin(loginCommand, request);
 	}
 	
