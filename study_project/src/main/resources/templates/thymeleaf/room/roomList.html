@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -5,36 +6,102 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
+<script type="text/javascript" src="/js/list.js" ></script>
+<link th:href="@{/css/list.css}" rel="stylesheet">
 
 </head>
 <body>
 <div layout:fragment="content">
 
-<h1>게시판</h1>
-	<table class="table">
-		<tr>
-			<th>no</th>
-			<th>관심사</th>
-			<th>스터디이름</th>
-			<th>참여인원</th>
-		</tr>
-		<th:block th:if="${#lists.isEmpty(list)}">
-			<tr><td colspan="4" style="text-align:center;">-------스터디가 없음.-----------</td></tr>
-		</th:block>
-		<th:block th:unless="${#lists.isEmpty(list)}">
-			<tr th:each="dto:${list}">
-				<td><input type="checkbox" name="chk" th:value="${dto.room_no}"/></td>
-				<td th:text="${dto.room_category}"></td>
-				<td>
-					<a th:href="@{/room/roomDetail(room_no=${dto.room_no})}">[[${dto.room_title}]]</a>
-				</td>
-				
-				<td th:text="${dto.room_count}"></td>
-			</tr>
-		</th:block>
-		
-	</table>
+<div class="container">
+        <div class="row">
+        <div class="gallery col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h1 class="gallery-title">스터디룸</h1>
+        </div>
+	
+        <div align="center">
+            <button class="btn btn-default filter-button" data-filter="all">All</button>
+            <button class="btn btn-default filter-button" data-filter="certificate">#자격증</button>
+            <button class="btn btn-default filter-button" data-filter="language">#어학</button>
+            <button class="btn btn-default filter-button" data-filter="job">#취업</button>
+            <button class="btn btn-default filter-button" data-filter="invest">#투자</button>
+            <button class="btn btn-default filter-button" data-filter="etc">#기타</button>
+        </div>
+        <br/>
+			
+			<th:block th:if="${#lists.isEmpty(list)}">
+			<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter certificate">
+                <p style="text-align:center;">-----스터디 생성 필요-------</p>
+            </div>	
+			</th:block>
+			<th:block th:unless="${#lists.isEmpty(list)}">
+				<div th:each="dto:${list}" 
+				     class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter" 
+				     th:classappend="${' ' + dto.room_category}">
+				    <a th:href="@{/room/roomDetail(room_no=${dto.room_no})}">
+				    <img style="width:320px ; height:200px;border-radius:10px;"
+         				th:src="@{/img/{fileName}(fileName=${dto.room_image})}" 
+         				th:attr="title=#{${dto.room_title}}">
+         			</a>
+         			<div class="product_text">
+				        <p style="font-family:Noto Sans CJK;font-size:19px;font-weight:bold;" th:text="${dto.room_title+'( '+dto.room_count+'/'+dto.room_max+ ')'}"></p>
+				    </div>
+				    
+				</div>
+			</th:block>
+		</div>
+	</div>
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter certificate"> -->
+<!--                 <img src="/img/1.jpg" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter language"> -->
+<!--                 <img src="/img/1.jpg" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter job"> -->
+<!--                 <img src="/img/1.jpg" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter invest"> -->
+<!--                 <img src="/img/1.jpg" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter language"> -->
+<!--                 <img src="/img/1.jpg" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter language"> -->
+<!--                 <img src="/img/1.jpg" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter language"> -->
+<!--                 <img src="/img/1.jpg" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter language"> -->
+<!--                 <img src="/img/coding.webp" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter language"> -->
+<!--                 <img src="/img/coding.webp" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter language"> -->
+<!--                 <img src="/img/coding.webp" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter etc"> -->
+<!--                 <img src="/img/123.webp" class="img-responsive"> -->
+<!--             </div> -->
+
+<!--             <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter etc"> -->
+<!--                 <img src="/img/123.webp" class="img-responsive"> -->
+<!--             </div> -->
+<!--         </div> -->
+<!--     </div> -->
+
+	
 </div>
 </body>
 </html>

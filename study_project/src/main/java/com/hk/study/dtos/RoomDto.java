@@ -1,12 +1,17 @@
 package com.hk.study.dtos;
 
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
+import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+@Component
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,5 +28,7 @@ public class RoomDto {
 	private Integer room_count;
 	private Integer room_max;
 	private String room_image;
-	private Integer user_no;
+	
+	private List<UserDto> userDto;
+	private List<FileDto> fileDto;
 }

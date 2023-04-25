@@ -28,8 +28,7 @@ public class RoomService {
 		dto.setRoom_host(udto.getUser_id());
 		dto.setRoom_upload(roomCreateCommand.getUpload());
 		dto.setRoom_chat(roomCreateCommand.getChat());;
-		dto.setRoom_count(Integer.parseInt(roomCreateCommand.getCount()));
-		dto.setUser_no(udto.getUser_no());
+		dto.setRoom_max(Integer.parseInt(roomCreateCommand.getMax_num()));
 		dto.setRoom_image(roomCreateCommand.getFilename());
 	
 		return roomMapper.roomRegist(dto);
@@ -37,6 +36,9 @@ public class RoomService {
 	
 	public List<RoomDto> roomList(){
 		return roomMapper.roomList();
-		
+	}
+	
+	public RoomDto roomDetail(int room_no) {
+		return roomMapper.roomDetail(room_no);
 	}
 }

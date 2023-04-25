@@ -12,5 +12,7 @@ public interface RoomMapper {
 	public boolean roomRegist(RoomDto dto);
 	//방조회
 	public List<RoomDto> roomList();
+	//방상세조회
+	public RoomDto roomDetail(int room_no);
 	
 }

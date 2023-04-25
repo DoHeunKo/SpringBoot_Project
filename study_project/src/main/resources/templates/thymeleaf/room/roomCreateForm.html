@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -47,7 +48,7 @@
  
 <!-- </form> -->
 
-
+<div class="container">
 <form id="form2" th:action="@{/room/roomCreate}" method="post" th:object="${roomCreateCommand}">
 	<input type="hidden" name="roomhost" th:value="gggg"/>
 	<label for="file">대표이미지</label><br/>
@@ -65,9 +66,11 @@
     <label for="category">카테고리</label>
     <select name="category" th:field="*{category}">
 		<option value="">카테고리 선택</option>
-	    <option value="어학">어학</option>
-	    <option value="자격증">자격증</option>
-	    <option value="기타">기타</option>
+	    <option value="language">어학</option>
+	    <option value="invest">투자</option>
+	    <option value="job">취업</option>
+	    <option value="certificate">자격증</option>
+	    <option value="etc">기타</option>
 	</select>
 	<span th:if="${#fields.hasErrors('category')}" th:classappend="${'invalid-feedback'}" th:errors="*{category}"></span><br/>
 	<label for="upload">업로드 가능 여부</label>
@@ -75,17 +78,18 @@
     <label for="chat">대화창 생성 여부</label>
     <input type="radio" id="chat" name="chat" value="y"  checked onclick="chatChk()"><br/>
     
-    <label for="count">참여인원</label>
-    <select name="count" th:field="*{count}" >
+    <label for="max_num">참여인원</label>
+    <select name="max_num" th:field="*{max_num}" >
     	<option value="">인원수 선택</option>
-	    <option value="1">1</option>
 	    <option value="2">2</option>
 	    <option value="3">3</option>
+	    <option value="4">4</option>
+	    <option value="5">5</option>
 	</select>
-	<span th:if="${#fields.hasErrors('count')}" th:classappend="${'invalid-feedback'}" th:errors="*{count}"></span><br/>
+	<span th:if="${#fields.hasErrors('max_num')}" th:classappend="${'invalid-feedback'}" th:errors="*{max_num}"></span><br/>
     <input type="submit" value="방생성 완료">
 </form>
-
+</div>
 </div>
 </body>
 </html>

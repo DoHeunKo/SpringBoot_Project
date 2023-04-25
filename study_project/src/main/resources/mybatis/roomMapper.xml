@@ -5,10 +5,61 @@
     <insert id="roomRegist" parameterType="RoomDto">
         INSERT INTO ROOM VALUES
         (NULL,#{room_title},#{room_content},#{room_category},#{room_host},
-        #{room_upload},#{room_chat},#{room_count},10,#{user_no},#{room_image});
+        #{room_upload},#{room_chat},1,#{room_max},#{room_image});
     </insert>
 	<select id="roomList" resultType="RoomDto">
-		SELECT ROOM_TITLE,ROOM_CATEGORY,ROOM_COUNT,ROOM_IMAGE
+		SELECT ROOM_NO,ROOM_TITLE,ROOM_CATEGORY,ROOM_COUNT,ROOM_MAX,ROOM_IMAGE
 		FROM ROOM
 	</select>
+
+	<resultMap type="RoomDto" id="RoomDtoMap">
+		<id property="room_no" column="ROOM_NO"/>
+		<result property="room_title" column="ROOM_TITLE"/>
+		<result property="room_content" column="ROOM_CONTENT"/>
+		<result property="room_category" column="ROOM_CATEGORY"/>
+		<result property="room_host" column="ROOM_HOST"/>
+		<result property="room_upload" column="ROOM_UPLOAD"/>
+		<result property="room_chat" column="ROOM_CHAT"/>
+		<result property="room_count" column="ROOM_COUNT"/>
+		<result property="room_max" column="ROOM_MAX"/>
+		<result property="room_image" column="ROOM_IMAGE"/>
+		
+		<collection property="userDto" resultMap="UserDtoMap"/>
+		<collection property="fileDto" resultMap="FileDtoMap"/>
+	</resultMap>
+	
+	<resultMap type="UserDto" id="UserDtoMap">
+		<id property="user_no" column="USER_NO"/>
+		<result property="user_id" column="USER_ID"/>
+		<result property="user_name" column="USER_NAME"/>
+		<result property="user_email" column="USER_EMAIL"/>
+		<result property="user_address" column="USER_ADDRESS"/>
+		<result property="user_role" column="USER_ROLE"/>
+		<result property="room_no" column="ROOM_NO"/>
+	</resultMap>
+	
+	<resultMap type="FileDto" id="FileDtoMap">
+		<id property="file_no" column="FILE_NO"/>
+		<result property="file_name" column="FILE_NAME"/>
+		<result property="file_size" column="FILE_SIZE"/>
+		<result property="room_no" column="ROOM_NO"/>
+	</resultMap>
+	
+<!-- 	<select id="fileList" resultMap="RoomDtoMap" parameterType="int"> -->
+<!-- 		SELECT DISTINCT FILE_NAME,FILE_SIZE -->
+<!-- 		FROM FILE F INNER JOIN ROOM R -->
+<!-- 		ON F.ROOM_NO=R.ROOM_NO -->
+<!-- 		WHERE R.ROOM_NO=#{room_no}; -->
+<!-- 	</select> -->
+	
+	<select id="roomDetail" resultMap="RoomDtoMap" parameterType="int">
+		SELECT R.ROOM_NO,R.ROOM_HOST,U.USER_ID,R.ROOM_COUNT,R.ROOM_MAX,R.ROOM_IMAGE,
+	    R.ROOM_TITLE,R.ROOM_CONTENT,F.FILE_NAME,F.FILE_SIZE
+	    FROM ROOM R INNER JOIN USER U
+	    ON R.ROOM_NO=U.ROOM_NO
+	    LEFT OUTER JOIN FILE F
+	    ON R.ROOM_NO=F.ROOM_NO
+	    WHERE R.ROOM_NO=#{room_no};
+	</select>
+
 </mapper>

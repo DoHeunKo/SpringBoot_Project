@@ -56,7 +56,7 @@ public class RoomController {
 			System.out.println(roomCreateCommand.getCategory());
 			System.out.println(roomCreateCommand.getUpload());
 			System.out.println(roomCreateCommand.getChat());
-			System.out.println(roomCreateCommand.getCount());
+			System.out.println(roomCreateCommand.getMax_num());
 
 			return "redirect:/room/roomCreateForm";
 		}
@@ -69,6 +69,25 @@ public class RoomController {
 		model.addAttribute("list",list);
 //		model.addAttribute("delBoardCommand",new DelBoardCommand());
 		return "thymeleaf/room/roomList";
+	}
+	
+	@GetMapping(value="/roomDetail")
+	public String roomDetail(int room_no,Model model) {
+		
+		RoomDto dto=roomService.roomDetail(room_no);
+		
+		if(dto==null) {
+			System.out.println("null");
+		}else {
+			System.out.println(dto.getRoom_content());
+			System.out.println(dto.getRoom_host());
+			System.out.println(dto.getRoom_count());
+			System.out.println(dto.getRoom_max());
+			System.out.println(dto.getRoom_image());
+		}
+		model.addAttribute("dto",dto);
+
+		return "thymeleaf/room/roomDetail";
 	}
 	
 }

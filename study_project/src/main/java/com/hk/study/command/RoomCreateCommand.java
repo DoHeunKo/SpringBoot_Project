@@ -16,7 +16,7 @@ public class RoomCreateCommand {
 	private String upload;
 	private String chat;
 	@NotBlank(message = "참여인원 선택")
-	private String count;
+	private String max_num;
 	private String filename;
 	
 

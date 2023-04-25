@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/thymeleaf/layouts/user_layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+ 	p,img{
+ 		display: inline-block;
+	}
+	p{
+		font-size:18px;
+	}
+	button{
+		width:100px;
+		height: 80px;
+		background-color: #03C75A;
+		font-size:25px;
+		color:white;
+	}
+	
+</style>
+</head>
+<body>
+<div layout:fragment="content">
+
+<h1 th:text="${dto.room_title}"></h1>
+
+<form th:action="@{/room/roomJoin}" method="post">
+
+
+<img style="width:320px ; height:200px;border-radius:10px;"
+         				th:src="@{/img/{fileName}(fileName=${dto.room_image})}" >
+<p th:text="${dto.room_host}"></p>
+<p th:text="${'('+ dto.room_count+'/'+dto.room_max +')'}"></p><br/>
+
+<label for="content">소개글</label><br/>
+<textarea rows="8" cols="80" readonly name="content" th:text="${dto.room_content}"></textarea><br/>
+
+<table class="table">
+   <tr>
+      <th>파일이름</th>
+      <th>파일크기</th>
+   </tr>
+   <tr th:if="${dto.fileDto[0].file_name==null}">
+         <td>첨부파일 없음</td>
+   </tr>
+   <tr th:unless="${dto.fileDto[0].file_name==null}" th:each="fdto:${dto.fileDto}">
+         <td>
+           
+               <span class="glyphicon glyphicon-folder-close"></span>
+               <a th:href="@{/room/download(file_no=#{fdto.file_no})}" 
+               th:text="${fdto.file_name}"></a>&nbsp;&nbsp;
+         </td>
+         <td>
+         	<p th:text="${fdto.file_size}"></p>
+         </td>
+    </tr>
+</table>
+
+<button type="submit" class="btn" >참여하기</button>
+<button type="button" class="btn" >목록</button>
+
+
+
+</form>
+
+</div>
+</body>
+</html>
