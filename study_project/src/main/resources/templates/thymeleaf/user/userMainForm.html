@@ -5,6 +5,40 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script th:inline="javascript">
+    var ehost='[[${session.id}]]';
+</script>
+<script type="text/javascript">
+	$(function(){
+		var host=ehost.substring(1,ehost.length-1);
+		$.ajax({
+			url:"/room/hostChk",
+			method:"get",
+			dataType:"json",
+			async:false,
+			data:{"host":host},
+			success:function(edata){
+				console.log(edata.host);
+				if(edata.host!=null){
+					$("#button1").css("background-color","red");
+					$("#button1").text("이미 생성한 방 존재");
+					$("#button1").prop("disabled",true);
+				}else{
+					$("#button1").css("background-color","#03C75A");
+					$("#button1").text("스터디룸생성");
+				
+				}
+			},
+			error:function(e){
+				console.log(e);
+			}
+		});
+		
+
+	})
+	
+</script>
+
 <style type="text/css">
 	#button1,#button2{
 		width:500px;
@@ -32,6 +66,7 @@
 
 <div class="container">
 <p th:text="${session.dto.user_id}"></p>
+<p th:text="${session.dto.user_no}"></p>
 
 <div id="content" class="center-block">
 	  <button type="button" id="button1" class="btn btn-success btn-lg" 

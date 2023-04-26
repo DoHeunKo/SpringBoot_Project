@@ -1,6 +1,8 @@
 package com.hk.study.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,12 +12,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hk.study.command.RegistCommand;
 import com.hk.study.command.RoomCreateCommand;
 import com.hk.study.dtos.RoomDto;
 import com.hk.study.dtos.UserDto;
 import com.hk.study.service.RoomService;
+import com.hk.study.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -88,6 +93,39 @@ public class RoomController {
 		model.addAttribute("dto",dto);
 
 		return "thymeleaf/room/roomDetail";
+	}
+	
+	
+	@GetMapping("/hostChk")
+	@ResponseBody
+	public Map<String,String> hostChk(String host){
+		String resultHost=roomService.hostChk(host);
+//		System.out.println(resultHost);
+		Map<String,String> map=new HashMap<>();
+		map.put("host", resultHost);
+		return map;
+	}
+	
+	@GetMapping("/joinChk")
+	@ResponseBody
+	public Map<String,String> joinChk(String no){
+		System.out.println(no);
+		String resultno=roomService.joinChk(no);
+		Map<String,String> map=new HashMap<>();
+		map.put("no", resultno);
+		return map;
+	}
+	
+	
+	@PostMapping(value="/roomJoin")
+	public String roomJoin(Model model,@RequestParam("room_no") String room_no
+			,@RequestParam("user_no") String user_no) {
+		int eroom_no=Integer.parseInt(room_no);
+		int euser_no=Integer.parseInt(user_no);
+		System.out.println(room_no);
+		System.out.println(user_no);
+		roomService.roomJoin(eroom_no,euser_no);
+		return "redirect:/user/userMainForm";
 	}
 	
 }

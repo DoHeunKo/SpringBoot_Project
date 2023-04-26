@@ -5,7 +5,7 @@
     <insert id="userRegist" parameterType="UserDto">
         INSERT INTO USER VALUES
         (NULL,#{user_id},#{user_name},#{user_password},#{user_email},
-        #{user_address},'USER','N',NULL);
+        #{user_address},'USER','N');
     </insert>
 	<select id="userLogin" resultType="UserDto" parameterType="String">
 		SELECT USER_NO,USER_ID,USER_NAME,USER_PASSWORD,USER_EMAIL,USER_ADDRESS,USER_ROLE
@@ -19,6 +19,9 @@
 	<select id="emailChk" resultType="String" parameterType="String">
 		SELECT USER_EMAIL FROM USER WHERE USER_EMAIL=#{user_email}
 	</select>
+	
+	
+	
 <!--     <select id="idChk" parameterType="String" resultType="String"> -->
 <!--         SELECT ID FROM MEMBER WHERE ID=#{id} -->
 <!--     </select> -->

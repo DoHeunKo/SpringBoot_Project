@@ -5,6 +5,59 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+<script th:inline="javascript">
+    var ehost = '[[${dto.room_host}]]';
+    var elogin='[[${session.id}]]';
+    var no='[[${session.dto.user_no}]]'
+</script>
+
+<script type="text/javascript">
+	$(function(){
+		var host=ehost.substring(1, ehost.length - 1);
+		var login=elogin.substring(1,elogin.length-1);
+		
+		if(host==login){
+			$("#join").css("background-color","red");
+			$("#join").text("참여불가");
+			$("#join").prop("disabled",true);
+		}else{
+				$("#join").css("background-color","#03C75A");
+				$("#join").text("참여하기");
+		
+			}
+		console.log(no);
+		console.log(typeof(no));
+// 		var no=eno.substring(1, eno.length - 1);
+		$.ajax({
+			url:"/room/joinChk",
+			method:"get",
+			dataType:"json",
+			async:false,
+			data:{"no":no},
+			success:function(edata){
+				console.log(edata.no);
+				if(edata.no!=null){
+					$("#join").css("background-color","red");
+					$("#join").text("참여불가");
+					$("#join").prop("disabled",true);
+				}else{
+					$("#join").css("color","#03C75A");
+					$("#join").text("참여하기");
+				
+				}
+			},
+			error:function(e){
+				console.log(e);
+			}
+		});
+
+		
+
+	})
+	
+</script>
+
 <style type="text/css">
  	p,img{
  		display: inline-block;
@@ -26,10 +79,11 @@
 <div layout:fragment="content">
 
 <h1 th:text="${dto.room_title}"></h1>
+<!-- <p th:text="${dto.room_no}"></p> -->
 
 <form th:action="@{/room/roomJoin}" method="post">
-
-
+<input type="hidden" name="user_no" th:value="${session.dto.user_no}"/>
+<input type="hidden" name="room_no" th:value="${dto.room_no}"/>
 <img style="width:320px ; height:200px;border-radius:10px;"
          				th:src="@{/img/{fileName}(fileName=${dto.room_image})}" >
 <p th:text="${dto.room_host}"></p>
@@ -59,11 +113,9 @@
     </tr>
 </table>
 
-<button type="submit" class="btn" >참여하기</button>
+
+<button type="submit" class="btn" id="join" >참여하기</button>
 <button type="button" class="btn" >목록</button>
-
-
-
 </form>
 
 </div>
