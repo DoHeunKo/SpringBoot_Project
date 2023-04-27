@@ -61,13 +61,15 @@ public class UserController {
 			return "thymeleaf/user/registForm";
 		}
 		try {
-			boolean isS=userService.userRegist(registCommand);
+			userService.userRegist(registCommand);
 			return "redirect:/user/loginForm";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "redirect:/user/registForm";
 		}
 	}
+	
+	
 	@GetMapping(value="/userMainForm")
 	public String userMainForm(Model model) {
 		

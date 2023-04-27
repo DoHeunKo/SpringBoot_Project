@@ -21,7 +21,10 @@ public class RoomService {
 	@Autowired
 	private RoomMapper roomMapper;
 	
-	public boolean roomRegist(RoomCreateCommand roomCreateCommand,HttpServletRequest request) {
+	
+	@Transactional
+	public void roomRegist(RoomCreateCommand roomCreateCommand,HttpServletRequest request,
+			int user_no) {
 		RoomDto dto=new RoomDto();
 		UserDto udto=(UserDto)request.getSession().getAttribute("dto");
 		dto.setRoom_title(roomCreateCommand.getTitle());
@@ -32,8 +35,19 @@ public class RoomService {
 		dto.setRoom_chat(roomCreateCommand.getChat());;
 		dto.setRoom_max(Integer.parseInt(roomCreateCommand.getMax_num()));
 		dto.setRoom_image(roomCreateCommand.getFilename());
-	
-		return roomMapper.roomRegist(dto);
+		boolean isS1=roomMapper.roomRegist(dto);
+		if(isS1) {
+			System.out.println("방생성 완료");
+		}
+		System.out.println("방등록시 넘어오는 user_no"+user_no);
+		System.out.println("넘어오는 room_no"+dto.getRoom_no());
+		UserRoomDto urdto=new UserRoomDto();
+		urdto.setUser_no(user_no);
+		urdto.setRoom_no(dto.getRoom_no());
+		boolean isS2=roomMapper.userRoom(urdto);
+		if(isS2) {
+			System.out.println("user_room테이블 갱신완료");
+		}
 	}
 	
 	public List<RoomDto> roomList(){
@@ -41,6 +55,9 @@ public class RoomService {
 	}
 	
 	public RoomDto roomDetail(int room_no) {
+		System.out.println(room_no);
+		RoomDto dto=roomMapper.roomDetail(room_no);
+		System.out.println(dto.getRoom_host());
 		return roomMapper.roomDetail(room_no);
 	}
 	
@@ -49,22 +66,39 @@ public class RoomService {
 		System.out.println(roomMapper.hostChk(host));
 		return roomMapper.hostChk(host);
 	}
-	public String joinChk(String no) {
-		return roomMapper.joinChk(no);
+	public String joinChk(String no,String rno) {
+		UserRoomDto urdto=new UserRoomDto();
+		
+		urdto.setUser_no(Integer.parseInt(no));
+		urdto.setRoom_no(Integer.parseInt(rno));
+		return roomMapper.joinChk(urdto);
 	}
+	
 	@Transactional
 	public void roomJoin(int room_no,int user_no) {
 		
-		UserRoomDto dto=new UserRoomDto();
-		dto.setUser_no(user_no);
-		dto.setRoom_no(room_no);
+		UserRoomDto urdto=new UserRoomDto();
+		urdto.setUser_no(user_no);
+		urdto.setRoom_no(room_no);
+	
 		boolean isS1=roomMapper.plusJoin(room_no);
 		if(isS1) {
 			System.out.println("count+1");
 		}
-		boolean isS2=roomMapper.userRoom(dto);
+		boolean isS2=roomMapper.userRoom(urdto);
 		if(isS2) {
 			System.out.println("userRoom테이블 추가");
 		}
 	}
+	
+	public int userMaxJoin(int user_no,int room_max) {
+		int num=roomMapper.userMaxJoin(user_no);
+		if(room_max==num) {
+			num=100;
+		}
+		System.out.println("room_max : "+ room_max);
+		System.out.println("service:"+num);
+		return num;
+	}
+
 }

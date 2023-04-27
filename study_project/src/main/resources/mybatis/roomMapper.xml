@@ -2,16 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hk.study.mapper.RoomMapper">
-    <insert id="roomRegist" parameterType="RoomDto">
+    <insert id="roomRegist" parameterType="RoomDto" 
+    						useGeneratedKeys="true"
+    						keyProperty="room_no">
         INSERT INTO ROOM VALUES
         (NULL,#{room_title},#{room_content},#{room_category},#{room_host},
         #{room_upload},#{room_chat},1,#{room_max},#{room_image});
     </insert>
+    <insert id="userRoom" parameterType="UserRoomDto">
+    	INSERT INTO USER_ROOM VALUES(NULL,#{user_no},#{room_no});
+    </insert>
+    
+    
 	<select id="roomList" resultType="RoomDto">
 		SELECT ROOM_NO,ROOM_TITLE,ROOM_CATEGORY,ROOM_COUNT,ROOM_MAX,ROOM_IMAGE
 		FROM ROOM
 	</select>
 
+	
+	<resultMap type="UserRoomDto" id="UserRoomDtoMap">
+		<id property="no" column="NO"/>
+		<result property="user_no" column="USER_NO"/>
+		<result property="room_no" column="ROOM_NO"/>
+		<collection property="userDto" resultMap="UserDtoMap"/>
+		<collection property="roomDto" resultMap="RoomDtoMap"/>
+	</resultMap>
+	
 	<resultMap type="RoomDto" id="RoomDtoMap">
 		<id property="room_no" column="ROOM_NO"/>
 		<result property="room_title" column="ROOM_TITLE"/>
@@ -27,7 +43,12 @@
 		<collection property="userDto" resultMap="UserDtoMap"/>
 		<collection property="fileDto" resultMap="FileDtoMap"/>
 	</resultMap>
-	
+	<resultMap type="FileDto" id="FileDtoMap">
+		<id property="file_no" column="FILE_NO"/>
+		<result property="file_name" column="FILE_NAME"/>
+		<result property="file_size" column="FILE_SIZE"/>
+		<result property="room_no" column="ROOM_NO"/>
+	</resultMap>
 	<resultMap type="UserDto" id="UserDtoMap">
 		<id property="user_no" column="USER_NO"/>
 		<result property="user_id" column="USER_ID"/>
@@ -38,12 +59,7 @@
 		
 	</resultMap>
 	
-	<resultMap type="FileDto" id="FileDtoMap">
-		<id property="file_no" column="FILE_NO"/>
-		<result property="file_name" column="FILE_NAME"/>
-		<result property="file_size" column="FILE_SIZE"/>
-		<result property="room_no" column="ROOM_NO"/>
-	</resultMap>
+	
 	
 <!-- 	<select id="fileList" resultMap="RoomDtoMap" parameterType="int"> -->
 <!-- 		SELECT DISTINCT FILE_NAME,FILE_SIZE -->
@@ -52,34 +68,44 @@
 <!-- 		WHERE R.ROOM_NO=#{room_no}; -->
 <!-- 	</select> -->
 	
-	<select id="roomDetail" resultMap="RoomDtoMap" parameterType="int">
-		SELECT R.ROOM_NO,ROOM_HOST,USER_ID,ROOM_COUNT,
-		ROOM_MAX,ROOM_IMAGE,ROOM_TITLE,ROOM_CONTENT,FILE_NAME,FILE_SIZE
-		FROM ROOM R INNER JOIN USER_ROOM UR
-		ON R.ROOM_NO =UR.ROOM_NO INNER JOIN USER U
-		ON UR.USER_NO=U.USER_NO INNER JOIN FILE F
-		ON UR.ROOM_NO=F.ROOM_NO
-	    WHERE R.ROOM_NO=#{room_no};
-	</select>
+	
 	
 	<select id="hostChk" resultType="String" parameterType="String">
 		SELECT ROOM_HOST FROM ROOM WHERE ROOM_HOST=#{room_host}
 	</select>
-	
-	<select id="joinChk" resultType="String" parameterType="String">
+	<select id="joinChk" resultType="String" parameterType="UserRoomDto">
 		SELECT ROOM_NO
-		FROM USER_ROOM
-		WHERE USER_NO=#{user_no};
+		FROM USER_ROOM 
+		WHERE USER_NO=#{user_no}  AND ROOM_NO =#{room_no};
 	</select>
 	
-	<update id="plusJoin" parameterType="int">
+	<select id="userMaxJoin" resultType="int" parameterType="int">
+		SELECT COUNT(ROOM_NO)
+		FROM USER_ROOM 
+		WHERE user_no=#{user_no};
+	</select>
+	
+	<select id="roomDetail" resultMap="RoomDtoMap" parameterType="int">
+		SELECT R.ROOM_NO,ROOM_HOST,ROOM_TITLE,ROOM_COUNT,ROOM_MAX,
+		ROOM_IMAGE,ROOM_CONTENT,FILE_NAME,FILE_SIZE
+		FROM ROOM R LEFT OUTER JOIN FILE F
+		ON R.ROOM_NO=F.ROOM_NO
+		WHERE R.ROOM_NO=#{room_no};
+	</select>
+	
+<!-- 	<select id="userMax" resultType="int" parameterType="int"> -->
+		
+<!-- 	</select> -->
+	
+	<update id="plusJoin" parameterType="int" >
 		UPDATE ROOM SET ROOM_COUNT=ROOM_COUNT+1 WHERE ROOM_NO=#{room_no};
 	</update>
 	
 	
-	<insert id="userRoom" parameterType="UserRoomDto">
-		INSERT INTO user_room VALUES(#{user_no},#{room_no});
-	</insert>
+	
+	
+	
+	
 	
 	
 

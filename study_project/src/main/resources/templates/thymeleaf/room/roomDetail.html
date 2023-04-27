@@ -9,7 +9,9 @@
 <script th:inline="javascript">
     var ehost = '[[${dto.room_host}]]';
     var elogin='[[${session.id}]]';
-    var no='[[${session.dto.user_no}]]'
+    var no='[[${session.dto.user_no}]]';
+    var rno='[[${dto.room_no}]]';
+    var rmax='[[${dto.room_max}]]';
 </script>
 
 <script type="text/javascript">
@@ -18,40 +20,73 @@
 		var login=elogin.substring(1,elogin.length-1);
 		
 		if(host==login){
-			$("#join").css("background-color","red");
-			$("#join").text("참여불가");
+			console.log($("#join").css("background-color")=="blue");
+			$("#join").css("background-color","blue");
+			$("#join").text("방장");
 			$("#join").prop("disabled",true);
 		}else{
-				$("#join").css("background-color","#03C75A");
-				$("#join").text("참여하기");
-		
-			}
-		console.log(no);
-		console.log(typeof(no));
-// 		var no=eno.substring(1, eno.length - 1);
-		$.ajax({
-			url:"/room/joinChk",
-			method:"get",
-			dataType:"json",
-			async:false,
-			data:{"no":no},
-			success:function(edata){
-				console.log(edata.no);
-				if(edata.no!=null){
-					$("#join").css("background-color","red");
-					$("#join").text("참여불가");
-					$("#join").prop("disabled",true);
-				}else{
-					$("#join").css("color","#03C75A");
-					$("#join").text("참여하기");
+				$.ajax({
+					url:"/room/joinChk",
+					method:"get",
+					dataType:"json",
+					async:false,
+					data:{"no":no, "rno":rno },
+					success:function(edata){
+						console.log(edata.no);
+						if(edata.no!=null){
+							
+								$("#join").css("background-color","red");
+								$("#join").text("참여중");
+								$("#join").prop("disabled",true);
+								
+						
+						}else{
+							$("#join").css("background-color","#03C75A");
+							$("#join").text("참여하기");
+							$("#join").prop("disabled",false);
+						
+						}
+					},
+					error:function(e){
+						console.log(e);
+					}
+				});
 				
+			
+			
+			if($("#join").css("background-color")!="red"){
+				$.ajax({
+					url:"/room/userMaxJoin",
+					method:"get",
+					dataType:"json",
+					async:false,
+					data:{"no": no, "rmax" : rmax},
+					success:function(edata){
+						console.log(edata.no);
+						if(edata.no==3){
+							$("#join").css("background-color","orange");
+							$("#join").text("참여가능(3개)");
+							$("#join").prop("disabled",true);
+						
+						}else if(edata.no==100){
+							$("#join").css("background-color","orange");
+							$("#join").text("마감");
+							$("#join").prop("disabled",true);
+						}
+						else{
+							$("#join").css("background-color","#03C75A");
+							$("#join").text("참여하기");
+							$("#join").prop("disabled",false);
+						
+						}
+					},
+					error:function(e){
+						console.log(e);
+					}
+				})
 				}
-			},
-			error:function(e){
-				console.log(e);
-			}
-		});
 
+			}
 		
 
 	})
@@ -79,8 +114,8 @@
 <div layout:fragment="content">
 
 <h1 th:text="${dto.room_title}"></h1>
-<!-- <p th:text="${dto.room_no}"></p> -->
-
+<p th:text="${'방번호 : '+dto.room_no}"></p><br/>
+<p th:text="${'세션user_no :'+session.dto.user_no}"></p>
 <form th:action="@{/room/roomJoin}" method="post">
 <input type="hidden" name="user_no" th:value="${session.dto.user_no}"/>
 <input type="hidden" name="room_no" th:value="${dto.room_no}"/>
@@ -91,6 +126,8 @@
 
 <label for="content">소개글</label><br/>
 <textarea rows="8" cols="80" readonly name="content" th:text="${dto.room_content}"></textarea><br/>
+
+<input type="file" name="filename" value="자료공유" multiple="multiple"/>
 
 <table class="table">
    <tr>

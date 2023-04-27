@@ -51,6 +51,7 @@
 <div class="container">
 <form id="form2" th:action="@{/room/roomCreate}" method="post" th:object="${roomCreateCommand}">
 	<input type="hidden" name="roomhost" th:value="gggg"/>
+	<input type="hidden" name="user_no" th:value="${session.dto.user_no}"/>
 	<label for="file">대표이미지</label><br/>
 	<img id="preview" style="width:250px;height:250px;border-radius: 60%;"/>
 	<input type="file" onchange="readURL(this);" name="filename"> <br/>

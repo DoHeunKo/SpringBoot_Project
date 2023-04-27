@@ -15,6 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Alias(value="UserRoomDto")
 public class UserRoomDto {
+	private int no;
 	private int user_no;
 	private int room_no;
 }

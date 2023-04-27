@@ -23,5 +23,5 @@ public class UserDto {
 	private String user_address;
 	private String user_role;
 	private String user_delflag;
-	private int room_no;
+
 }
