@@ -1,5 +1,7 @@
 package com.hk.study.controller;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +16,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartRequest;
 
 import com.hk.study.command.RegistCommand;
 import com.hk.study.command.RoomCreateCommand;
+import com.hk.study.dtos.FileDto;
 import com.hk.study.dtos.RoomDto;
 import com.hk.study.dtos.UserDto;
+import com.hk.study.service.FileService;
 import com.hk.study.service.RoomService;
 import com.hk.study.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.Session;
 import javassist.expr.NewArray;
@@ -33,6 +39,9 @@ public class RoomController {
 	
 	@Autowired
 	RoomService roomService;
+	
+	@Autowired
+	FileService fileService;
 	
 	@GetMapping("/roomCreateForm")
 	public String roomCreateForm(Model model, HttpServletRequest request) {
@@ -82,7 +91,7 @@ public class RoomController {
 	}
 	
 	@GetMapping(value="/roomDetail")
-	public String roomDetail(int room_no,Model model) {
+	public String roomDetail(Integer room_no,Model model) {
 //		System.out.println(room_no);
 		RoomDto dto=roomService.roomDetail(room_no);
 		
@@ -135,14 +144,51 @@ public class RoomController {
 	
 	@GetMapping("/userMaxJoin")
 	@ResponseBody
-	public Map<String,String> userMaxJoin(String no,String rmax) {
+	public Map<String,String> userMaxJoin(String no,String rno) {
 		int eno=Integer.parseInt(no);
-		int ermax=Integer.parseInt(rmax);
-		int num=roomService.userMaxJoin(eno,ermax);
+		int erno=Integer.parseInt(rno);
+		
+		int num=roomService.userMaxJoin(eno,erno);
 //		System.out.println("컨트롤러 num"+num);
 		Map<String,String> map=new HashMap<>();
 		map.put("no", num+"");
 		return map;
+	}
+	
+	@PostMapping(value="/upload")
+	public String upload(MultipartRequest multipartRequest
+			,@RequestParam("room_no") String room_no,Model model) {
+		int eroom_no=Integer.parseInt(room_no);
+		System.out.println("화면으로부터 받은값: (upload)"+eroom_no);
+		try {
+			roomService.upload(multipartRequest,eroom_no);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "thymeleaf/room/roomDetail";
+		}
+		//리다이렉트할 때 model에 roomDto에해당하는 dto를 다시 넣어줘서 실행
+//		RoomDto dto=roomService.roomDetail(eroom_no);
+//		model.addAttribute("dto",dto);
+		return "redirect:/room/roomDetail?room_no="+eroom_no;
+	}
+	
+	@GetMapping("/download")
+	public void download(String file_no,HttpServletRequest request,
+							HttpServletResponse response) {
+		System.out.println("다운로드: "+file_no);
+		String filePath="C:/Users/user/git/SpringBoot_Project/study_project/src/main/resources/upload";
+		int efile_no=Integer.parseInt(file_no);
+		FileDto fdto=roomService.getFileInfo(efile_no);
+		
+		try {
+			fileService.fileDownload(filePath, 
+					fdto.getFile_name(), fdto.getFile_fname(), 
+					request, response);
+		} catch (UnsupportedEncodingException e) {
+			
+			e.printStackTrace();
+		}
 	}
 }
 

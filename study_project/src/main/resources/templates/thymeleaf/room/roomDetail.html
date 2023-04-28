@@ -60,7 +60,7 @@
 					method:"get",
 					dataType:"json",
 					async:false,
-					data:{"no": no, "rmax" : rmax},
+					data:{"no": no, "rno" : rno},
 					success:function(edata){
 						console.log(edata.no);
 						if(edata.no==3){
@@ -127,9 +127,14 @@
 <label for="content">소개글</label><br/>
 <textarea rows="8" cols="80" readonly name="content" th:text="${dto.room_content}"></textarea><br/>
 
-<input type="file" name="filename" value="자료공유" multiple="multiple"/>
+<button type="submit" class="btn" id="join" >참여하기</button>
+<button type="button" class="btn" >목록</button>
+</form>
 
+<form th:action="@{/room/upload}" method="post" enctype="multipart/form-data">
+<input type="hidden" name="room_no" th:value="${dto.room_no}"/>
 <table class="table">
+	
    <tr>
       <th>파일이름</th>
       <th>파일크기</th>
@@ -137,23 +142,27 @@
    <tr th:if="${dto.fileDto[0].file_name==null}">
          <td>첨부파일 없음</td>
    </tr>
-   <tr th:unless="${dto.fileDto[0].file_name==null}" th:each="fdto:${dto.fileDto}">
+   <th:block th:each="fdto:${dto.fileDto}">
+   <tr th:unless="${dto.fileDto[0].file_name==null}" >
+         
          <td>
            
                <span class="glyphicon glyphicon-folder-close"></span>
-               <a th:href="@{/room/download(file_no=#{fdto.file_no})}" 
-               th:text="${fdto.file_name}"></a>&nbsp;&nbsp;
+               <a th:href="@{/room/download(file_no=${fdto.file_no})}" 
+               th:text="${fdto.file_name+ fdto.file_no}"></a>;
          </td>
          <td>
          	<p th:text="${fdto.file_size}"></p>
          </td>
+        
     </tr>
+    </th:block>
 </table>
-
-
-<button type="submit" class="btn" id="join" >참여하기</button>
-<button type="button" class="btn" >목록</button>
+<input type="file" class="btn" name="filename"  multiple="multiple"/>
+<button type="submit" class="btn" id="upload" >자료공유</button>
 </form>
+
+
 
 </div>
 </body>

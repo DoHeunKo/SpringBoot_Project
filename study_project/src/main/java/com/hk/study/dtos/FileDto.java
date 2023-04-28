@@ -19,5 +19,6 @@ public class FileDto {
 	private int file_no;
 	private String file_name;
 	private int file_size;
-	private int room_no;
+	private Integer room_no;
+	private String file_fname;
 }

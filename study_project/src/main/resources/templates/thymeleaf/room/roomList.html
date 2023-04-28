@@ -6,7 +6,28 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+
 <script type="text/javascript" src="/js/list.js" ></script>
+<style type="text/css">
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-text {
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 2px 2px #000000;
+}
+</style>
 <link th:href="@{/css/list.css}" rel="stylesheet">
 
 </head>
@@ -38,11 +59,20 @@
 				<div th:each="dto:${list}" 
 				     class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter" 
 				     th:classappend="${' ' + dto.room_category}">
-				    <a th:href="@{/room/roomDetail(room_no=${dto.room_no})}">
-				    <img style="width:320px ; height:200px;border-radius:10px;"
-         				th:src="@{/img/{fileName}(fileName=${dto.room_image})}" 
-         				th:attr="title=#{${dto.room_title}}">
-         			</a>
+				    <div th:if="${dto.room_count==dto.room_max}" id="image-container">
+					    <a id="over" href="#">
+					    <img style="width:320px ; height:200px;border-radius:10px; opacity:0.5"
+		         				th:src="@{/img/{fileName}(fileName=${dto.room_image})}" >
+		         		</a>
+		         		<div class="image-text">마감</div>
+         			</div>
+         			<div th:unless="${dto.room_count==dto.room_max}">
+         				<a id="over" th:href="@{/room/roomDetail(room_no=${dto.room_no})}">
+					    <img style="width:320px ; height:200px;border-radius:10px;"
+	         				th:src="@{/img/{fileName}(fileName=${dto.room_image})}" 
+	         				th:attr="title=#{${dto.room_title}}">
+	         			</a>
+         			</div>
          			<div class="product_text">
 				        <p style="font-family:Noto Sans CJK;font-size:19px;font-weight:bold;" th:text="${dto.room_title+'( '+dto.room_count+'/'+dto.room_max+ ')'}"></p>
 				    </div>

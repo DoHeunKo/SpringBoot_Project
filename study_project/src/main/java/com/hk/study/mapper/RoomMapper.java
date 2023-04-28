@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+
+import com.hk.study.dtos.FileDto;
 import com.hk.study.dtos.RoomDto;
 import com.hk.study.dtos.UserRoomDto;
 
@@ -26,7 +28,8 @@ public interface RoomMapper {
 	public String joinChk(UserRoomDto dto);
 	//인당 참여방 3개
 	public int userMaxJoin(int user_no);
-
-	
-	
+	//파일업로드
+	public boolean insertFile(FileDto dto);
+	//다운로드
+	public FileDto getFileInfo(int file_no);
 }

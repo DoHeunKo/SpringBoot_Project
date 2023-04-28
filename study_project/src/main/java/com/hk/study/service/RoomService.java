@@ -1,12 +1,15 @@
 package com.hk.study.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartRequest;
 
 import com.hk.study.command.RoomCreateCommand;
+import com.hk.study.dtos.FileDto;
 import com.hk.study.dtos.RoomDto;
 import com.hk.study.dtos.UserDto;
 import com.hk.study.dtos.UserRoomDto;
@@ -20,7 +23,8 @@ import jakarta.websocket.Session;
 public class RoomService {
 	@Autowired
 	private RoomMapper roomMapper;
-	
+	@Autowired
+	private FileService fileService;
 	
 	@Transactional
 	public void roomRegist(RoomCreateCommand roomCreateCommand,HttpServletRequest request,
@@ -54,11 +58,11 @@ public class RoomService {
 		return roomMapper.roomList();
 	}
 	
-	public RoomDto roomDetail(int room_no) {
+	public RoomDto roomDetail(Integer room_no) {
 		System.out.println(room_no);
 		RoomDto dto=roomMapper.roomDetail(room_no);
-		System.out.println(dto.getRoom_host());
-		return roomMapper.roomDetail(room_no);
+//		System.out.println(dto.getRoom_host());
+		return dto;
 	}
 	
 	public String hostChk(String host) {
@@ -91,14 +95,33 @@ public class RoomService {
 		}
 	}
 	
-	public int userMaxJoin(int user_no,int room_max) {
+	public int userMaxJoin(int user_no,int room_no) {
+		//한사람이 참여하고있는 스터디 개수 
 		int num=roomMapper.userMaxJoin(user_no);
-		if(room_max==num) {
+		//room에서 현재 count를 가져와서 max와비교
+		RoomDto dto=roomMapper.roomDetail(room_no);
+		int room_count=dto.getRoom_count();
+		int room_max=dto.getRoom_max();
+		if(room_count==room_max) {
 			num=100;
 		}
-		System.out.println("room_max : "+ room_max);
+		System.out.println("room_max : ");
 		System.out.println("service:"+num);
 		return num;
+	}
+	
+	public void upload(MultipartRequest multipartRequest,Integer room_no) throws IllegalStateException, IOException {
+		System.out.println("roomService:room_no : "+room_no);
+		if(!multipartRequest.getFiles("filename").isEmpty()) {
+			String filePath="C:/Users/user/git/SpringBoot_Project/study_project/src/main/resources/upload";
+			List<FileDto> uploadFileList=fileService.uploadFiles(filePath, multipartRequest,room_no);
+			for(FileDto fdto: uploadFileList) {
+				roomMapper.insertFile(fdto);
+			}
+		}
+	}
+	public FileDto getFileInfo(int file_no) {
+		return roomMapper.getFileInfo(file_no);
 	}
 
 }

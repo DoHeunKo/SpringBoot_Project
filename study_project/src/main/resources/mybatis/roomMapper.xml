@@ -48,6 +48,7 @@
 		<result property="file_name" column="FILE_NAME"/>
 		<result property="file_size" column="FILE_SIZE"/>
 		<result property="room_no" column="ROOM_NO"/>
+		<result property="file_fname" column="FILE_FNAME"/>
 	</resultMap>
 	<resultMap type="UserDto" id="UserDtoMap">
 		<id property="user_no" column="USER_NO"/>
@@ -87,7 +88,7 @@
 	
 	<select id="roomDetail" resultMap="RoomDtoMap" parameterType="int">
 		SELECT R.ROOM_NO,ROOM_HOST,ROOM_TITLE,ROOM_COUNT,ROOM_MAX,
-		ROOM_IMAGE,ROOM_CONTENT,FILE_NAME,FILE_SIZE
+		ROOM_IMAGE,ROOM_CONTENT,FILE_NO,FILE_NAME,FILE_SIZE
 		FROM ROOM R LEFT OUTER JOIN FILE F
 		ON R.ROOM_NO=F.ROOM_NO
 		WHERE R.ROOM_NO=#{room_no};
@@ -101,9 +102,15 @@
 		UPDATE ROOM SET ROOM_COUNT=ROOM_COUNT+1 WHERE ROOM_NO=#{room_no};
 	</update>
 	
+	<insert id="insertFile" parameterType="FileDto">
+		INSERT INTO FILE VALUES(NULL,#{file_name},#{file_size},#{room_no},#{file_fname})
+	</insert>
 	
-	
-	
+	<select id="getFileInfo" parameterType="int" resultType="fileDto">
+		SELECT FILE_NO,FILE_NAME,FILE_SIZE,ROOM_NO,FILE_FNAME
+		FROM FILE
+		WHERE FILE_NO=#{file_no}
+	</select>
 	
 	
 	
